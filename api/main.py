@@ -7,6 +7,17 @@ from openai import OpenAI
 from datetime import datetime
 from typing import List, Dict, Any
 import aiosqlite  # REQUIRED for Vercel
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
+
 
 app = FastAPI()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -82,4 +93,7 @@ async def analyze_with_ai(text: str) -> Dict[str, str]:
 async def root():
     return {"message": "AI Pipeline running on Vercel!"}
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
